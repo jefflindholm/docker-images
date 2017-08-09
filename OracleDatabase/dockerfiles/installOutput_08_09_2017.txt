@@ -1,0 +1,423 @@
+Checking if required packages are present and valid...
+oracle-xe-11.2.0-1.0.x86_64.rpm.zip: OK
+==========================
+DOCKER info:
+Containers: 2
+ Running: 0
+ Paused: 0
+ Stopped: 2
+Images: 11
+Server Version: 17.06.0-ce
+Storage Driver: aufs
+ Root Dir: /var/lib/docker/aufs
+ Backing Filesystem: extfs
+ Dirs: 27
+ Dirperm1 Supported: true
+Logging Driver: json-file
+Cgroup Driver: cgroupfs
+Plugins: 
+ Volume: local
+ Network: bridge host macvlan null overlay
+ Log: awslogs fluentd gcplogs gelf journald json-file logentries splunk syslog
+Swarm: inactive
+Runtimes: runc
+Default Runtime: runc
+Init Binary: docker-init
+containerd version: cfb82a876ecc11b5ca0977d1733adbe58599088a
+runc version: 2d41c047c83e09a6d61d464906feb2a2f3c52aa4
+init version: 949e6fa
+Security Options:
+ apparmor
+ seccomp
+  Profile: default
+Kernel Version: 4.4.0-89-generic
+Operating System: Ubuntu 16.04.2 LTS
+OSType: linux
+Architecture: x86_64
+CPUs: 8
+Total Memory: 15.55GiB
+Name: jlindholm-13r3
+ID: CJVR:LIC6:QMUS:SGFE:KIYI:KJEZ:AYKU:Q2YH:34IJ:PDRB:PNR4:XDOC
+Docker Root Dir: /var/lib/docker
+Debug Mode (client): false
+Debug Mode (server): false
+Username: jefflindholm
+Registry: https://index.docker.io/v1/
+Experimental: false
+Insecure Registries:
+ 127.0.0.0/8
+Live Restore Enabled: false
+
+==========================
+Building image 'oracle/database:11.2.0.2-xe' ...
+Sending build context to Docker daemon  315.9MB
+Step 1/9 : FROM oraclelinux:7-slim
+7-slim: Pulling from library/oraclelinux
+3152c71f8d80: Pulling fs layer
+3152c71f8d80: Verifying Checksum
+3152c71f8d80: Download complete
+3152c71f8d80: Pull complete
+Digest: sha256:e464042b724d41350fb3ac2c2f84bd9d28d98302c9ebe66048a5367682e5fad2
+Status: Downloaded newer image for oraclelinux:7-slim
+ ---> c0feb50f7527
+Step 2/9 : MAINTAINER Gerald Venzl <gerald.venzl@oracle.com>
+ ---> Running in 702bfb8ee86a
+ ---> fe114cf12ef7
+Removing intermediate container 702bfb8ee86a
+Step 3/9 : ENV ORACLE_BASE /u01/app/oracle ORACLE_HOME /u01/app/oracle/product/11.2.0/xe ORACLE_SID XE INSTALL_FILE_1 "oracle-xe-11.2.0-1.0.x86_64.rpm.zip" INSTALL_DIR "$HOME/install" CONFIG_RSP "xe.rsp" RUN_FILE "runOracle.sh" PWD_FILE "setPassword.sh"
+ ---> Running in b53736a5c494
+ ---> 34eb7aab07be
+Removing intermediate container b53736a5c494
+Step 4/9 : ENV PATH $ORACLE_HOME/bin:$PATH
+ ---> Running in 491fd7353683
+ ---> 302932ae9ff0
+Removing intermediate container 491fd7353683
+Step 5/9 : COPY $INSTALL_FILE_1 $CONFIG_RSP $RUN_FILE $PWD_FILE $INSTALL_DIR/
+ ---> 2df4e9f5515f
+Removing intermediate container 2119b8461ab4
+Step 6/9 : RUN yum -y install unzip libaio bc initscripts net-tools openssl &&     yum clean all &&     cd $INSTALL_DIR &&     unzip $INSTALL_FILE_1 &&     rm $INSTALL_FILE_1 &&        rpm -i Disk1/*.rpm &&        mkdir -p $ORACLE_BASE/scripts/setup &&     mkdir $ORACLE_BASE/scripts/startup &&     ln -s $ORACLE_BASE/scripts /docker-entrypoint-initdb.d &&     mkdir $ORACLE_BASE/oradata &&     chown -R oracle:dba $ORACLE_BASE &&     mv $INSTALL_DIR/$CONFIG_RSP $ORACLE_BASE/ &&     mv $INSTALL_DIR/$RUN_FILE $ORACLE_BASE/ &&     mv $INSTALL_DIR/$PWD_FILE $ORACLE_BASE/ &&     ln -s $ORACLE_BASE/$PWD_FILE / &&     cd $HOME &&     rm -rf $INSTALL_DIR &&     chmod ug+x $ORACLE_BASE/*.sh
+ ---> Running in 1e090dd3f023
+Loaded plugins: ovl
+Resolving Dependencies
+--> Running transaction check
+---> Package bc.x86_64 0:1.06.95-13.el7 will be installed
+---> Package initscripts.x86_64 0:9.49.39-1.0.1.el7 will be installed
+--> Processing Dependency: udev >= 125-1 for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: sysvinit-tools >= 2.87-5 for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: util-linux >= 2.16 for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: /sbin/arping for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: systemd for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: iproute for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: hostname for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: /sbin/sysctl for package: initscripts-9.49.39-1.0.1.el7.x86_64
+--> Processing Dependency: module-init-tools for package: initscripts-9.49.39-1.0.1.el7.x86_64
+---> Package libaio.x86_64 0:0.3.109-13.el7 will be installed
+---> Package net-tools.x86_64 0:2.0-0.22.20131004git.el7 will be installed
+---> Package openssl.x86_64 1:1.0.2k-8.0.1.el7 will be installed
+--> Processing Dependency: make for package: 1:openssl-1.0.2k-8.0.1.el7.x86_64
+---> Package unzip.x86_64 0:6.0-16.el7 will be installed
+--> Running transaction check
+---> Package hostname.x86_64 0:3.13-3.el7 will be installed
+---> Package iproute.x86_64 0:3.10.0-87.0.1.el7 will be installed
+--> Processing Dependency: libmnl.so.0(LIBMNL_1.0)(64bit) for package: iproute-3.10.0-87.0.1.el7.x86_64
+--> Processing Dependency: libmnl.so.0()(64bit) for package: iproute-3.10.0-87.0.1.el7.x86_64
+--> Processing Dependency: libxtables.so.10()(64bit) for package: iproute-3.10.0-87.0.1.el7.x86_64
+---> Package iputils.x86_64 0:20160308-10.el7 will be installed
+---> Package kmod.x86_64 0:20-15.0.1.el7 will be installed
+--> Processing Dependency: /usr/bin/gzip for package: kmod-20-15.0.1.el7.x86_64
+--> Processing Dependency: /usr/bin/xz for package: kmod-20-15.0.1.el7.x86_64
+--> Processing Dependency: /usr/bin/nm for package: kmod-20-15.0.1.el7.x86_64
+--> Processing Dependency: dracut for package: kmod-20-15.0.1.el7.x86_64
+---> Package make.x86_64 1:3.82-23.el7 will be installed
+---> Package procps-ng.x86_64 0:3.3.10-16.el7 will be installed
+--> Processing Dependency: libsystemd.so.0(LIBSYSTEMD_209)(64bit) for package: procps-ng-3.3.10-16.el7.x86_64
+--> Processing Dependency: libsystemd.so.0()(64bit) for package: procps-ng-3.3.10-16.el7.x86_64
+---> Package systemd.x86_64 0:219-42.0.1.el7 will be installed
+--> Processing Dependency: libdw.so.1(ELFUTILS_0.158)(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libdw.so.1(ELFUTILS_0.130)(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libkmod.so.2(LIBKMOD_5)(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: dbus for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: acl for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libpam.so.0(LIBPAM_1.0)(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libdw.so.1(ELFUTILS_0.122)(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libcryptsetup.so.4(CRYPTSETUP_1.0)(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libqrencode.so.3()(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libdw.so.1()(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libpam.so.0()(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libkmod.so.2()(64bit) for package: systemd-219-42.0.1.el7.x86_64
+--> Processing Dependency: libcryptsetup.so.4()(64bit) for package: systemd-219-42.0.1.el7.x86_64
+---> Package sysvinit-tools.x86_64 0:2.88-14.dsf.el7 will be installed
+---> Package util-linux.x86_64 0:2.23.2-43.el7 will be installed
+--> Processing Dependency: libutempter.so.0(UTEMPTER_1.1)(64bit) for package: util-linux-2.23.2-43.el7.x86_64
+--> Processing Dependency: libutempter.so.0()(64bit) for package: util-linux-2.23.2-43.el7.x86_64
+--> Processing Dependency: libuser.so.1()(64bit) for package: util-linux-2.23.2-43.el7.x86_64
+--> Running transaction check
+---> Package acl.x86_64 0:2.2.51-12.el7 will be installed
+---> Package binutils.x86_64 0:2.25.1-31.base.el7 will be installed
+---> Package cryptsetup-libs.x86_64 0:1.7.4-3.el7 will be installed
+--> Processing Dependency: libdevmapper.so.1.02(Base)(64bit) for package: cryptsetup-libs-1.7.4-3.el7.x86_64
+--> Processing Dependency: libdevmapper.so.1.02(DM_1_02_97)(64bit) for package: cryptsetup-libs-1.7.4-3.el7.x86_64
+--> Processing Dependency: libdevmapper.so.1.02()(64bit) for package: cryptsetup-libs-1.7.4-3.el7.x86_64
+---> Package dbus.x86_64 1:1.6.12-17.0.1.el7 will be installed
+--> Processing Dependency: dbus-libs(x86-64) = 1:1.6.12-17.0.1.el7 for package: 1:dbus-1.6.12-17.0.1.el7.x86_64
+--> Processing Dependency: libdbus-1.so.3()(64bit) for package: 1:dbus-1.6.12-17.0.1.el7.x86_64
+---> Package dracut.x86_64 0:033-502.0.1.el7 will be installed
+--> Processing Dependency: /usr/bin/pkg-config for package: dracut-033-502.0.1.el7.x86_64
+--> Processing Dependency: kpartx for package: dracut-033-502.0.1.el7.x86_64
+--> Processing Dependency: tar for package: dracut-033-502.0.1.el7.x86_64
+--> Processing Dependency: hardlink for package: dracut-033-502.0.1.el7.x86_64
+---> Package elfutils-libs.x86_64 0:0.168-8.el7 will be installed
+--> Processing Dependency: default-yama-scope for package: elfutils-libs-0.168-8.el7.x86_64
+---> Package gzip.x86_64 0:1.5-9.el7 will be installed
+---> Package iptables.x86_64 0:1.4.21-18.el7 will be installed
+--> Processing Dependency: libnetfilter_conntrack.so.3()(64bit) for package: iptables-1.4.21-18.el7.x86_64
+--> Processing Dependency: libnfnetlink.so.0()(64bit) for package: iptables-1.4.21-18.el7.x86_64
+---> Package kmod-libs.x86_64 0:20-15.0.1.el7 will be installed
+---> Package libmnl.x86_64 0:1.0.3-7.el7 will be installed
+---> Package libuser.x86_64 0:0.60-7.el7_1 will be installed
+---> Package libutempter.x86_64 0:1.1.6-4.el7 will be installed
+---> Package pam.x86_64 0:1.1.8-18.el7 will be installed
+--> Processing Dependency: libpwquality >= 0.9.9 for package: pam-1.1.8-18.el7.x86_64
+--> Processing Dependency: cracklib-dicts >= 2.8 for package: pam-1.1.8-18.el7.x86_64
+--> Processing Dependency: libcrack.so.2()(64bit) for package: pam-1.1.8-18.el7.x86_64
+---> Package qrencode-libs.x86_64 0:3.4.1-3.el7 will be installed
+---> Package systemd-libs.x86_64 0:219-42.0.1.el7 will be installed
+---> Package xz.x86_64 0:5.2.2-1.el7 will be installed
+--> Running transaction check
+---> Package cracklib.x86_64 0:2.9.0-11.el7 will be installed
+---> Package cracklib-dicts.x86_64 0:2.9.0-11.el7 will be installed
+---> Package dbus-libs.x86_64 1:1.6.12-17.0.1.el7 will be installed
+---> Package device-mapper-libs.x86_64 7:1.02.140-8.0.1.el7 will be installed
+--> Processing Dependency: device-mapper = 7:1.02.140-8.0.1.el7 for package: 7:device-mapper-libs-1.02.140-8.0.1.el7.x86_64
+---> Package elfutils-default-yama-scope.noarch 0:0.168-8.el7 will be installed
+---> Package hardlink.x86_64 1:1.0-19.el7 will be installed
+---> Package kpartx.x86_64 0:0.4.9-111.el7 will be installed
+---> Package libnetfilter_conntrack.x86_64 0:1.0.6-1.el7_3 will be installed
+---> Package libnfnetlink.x86_64 0:1.0.1-4.el7 will be installed
+---> Package libpwquality.x86_64 0:1.2.3-4.el7 will be installed
+---> Package pkgconfig.x86_64 1:0.27.1-4.el7 will be installed
+---> Package tar.x86_64 2:1.26-32.el7 will be installed
+--> Running transaction check
+---> Package device-mapper.x86_64 7:1.02.140-8.0.1.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package                     Arch   Version                    Repository  Size
+================================================================================
+Installing:
+ bc                          x86_64 1.06.95-13.el7             ol7_latest 114 k
+ initscripts                 x86_64 9.49.39-1.0.1.el7          ol7_latest 435 k
+ libaio                      x86_64 0.3.109-13.el7             ol7_latest  24 k
+ net-tools                   x86_64 2.0-0.22.20131004git.el7   ol7_latest 305 k
+ openssl                     x86_64 1:1.0.2k-8.0.1.el7         ol7_latest 491 k
+ unzip                       x86_64 6.0-16.el7                 ol7_latest 169 k
+Installing for dependencies:
+ acl                         x86_64 2.2.51-12.el7              ol7_latest  80 k
+ binutils                    x86_64 2.25.1-31.base.el7         ol7_latest 5.4 M
+ cracklib                    x86_64 2.9.0-11.el7               ol7_latest  79 k
+ cracklib-dicts              x86_64 2.9.0-11.el7               ol7_latest 3.6 M
+ cryptsetup-libs             x86_64 1.7.4-3.el7                ol7_latest 222 k
+ dbus                        x86_64 1:1.6.12-17.0.1.el7        ol7_latest 307 k
+ dbus-libs                   x86_64 1:1.6.12-17.0.1.el7        ol7_latest 151 k
+ device-mapper               x86_64 7:1.02.140-8.0.1.el7       ol7_latest 280 k
+ device-mapper-libs          x86_64 7:1.02.140-8.0.1.el7       ol7_latest 311 k
+ dracut                      x86_64 033-502.0.1.el7            ol7_latest 322 k
+ elfutils-default-yama-scope noarch 0.168-8.el7                ol7_latest  30 k
+ elfutils-libs               x86_64 0.168-8.el7                ol7_latest 263 k
+ gzip                        x86_64 1.5-9.el7                  ol7_latest 129 k
+ hardlink                    x86_64 1:1.0-19.el7               ol7_latest  14 k
+ hostname                    x86_64 3.13-3.el7                 ol7_latest  16 k
+ iproute                     x86_64 3.10.0-87.0.1.el7          ol7_latest 651 k
+ iptables                    x86_64 1.4.21-18.el7              ol7_latest 427 k
+ iputils                     x86_64 20160308-10.el7            ol7_latest 147 k
+ kmod                        x86_64 20-15.0.1.el7              ol7_latest 118 k
+ kmod-libs                   x86_64 20-15.0.1.el7              ol7_latest  48 k
+ kpartx                      x86_64 0.4.9-111.el7              ol7_latest  72 k
+ libmnl                      x86_64 1.0.3-7.el7                ol7_latest  22 k
+ libnetfilter_conntrack      x86_64 1.0.6-1.el7_3              ol7_latest  55 k
+ libnfnetlink                x86_64 1.0.1-4.el7                ol7_latest  25 k
+ libpwquality                x86_64 1.2.3-4.el7                ol7_latest  84 k
+ libuser                     x86_64 0.60-7.el7_1               ol7_latest 397 k
+ libutempter                 x86_64 1.1.6-4.el7                ol7_latest  24 k
+ make                        x86_64 1:3.82-23.el7              ol7_latest 420 k
+ pam                         x86_64 1.1.8-18.el7               ol7_latest 715 k
+ pkgconfig                   x86_64 1:0.27.1-4.el7             ol7_latest  53 k
+ procps-ng                   x86_64 3.3.10-16.el7              ol7_latest 289 k
+ qrencode-libs               x86_64 3.4.1-3.el7                ol7_latest  49 k
+ systemd                     x86_64 219-42.0.1.el7             ol7_latest 5.2 M
+ systemd-libs                x86_64 219-42.0.1.el7             ol7_latest 375 k
+ sysvinit-tools              x86_64 2.88-14.dsf.el7            ol7_latest  62 k
+ tar                         x86_64 2:1.26-32.el7              ol7_latest 844 k
+ util-linux                  x86_64 2.23.2-43.el7              ol7_latest 2.0 M
+ xz                          x86_64 5.2.2-1.el7                ol7_latest 228 k
+
+Transaction Summary
+================================================================================
+Install  6 Packages (+38 Dependent packages)
+
+Total download size: 25 M
+Installed size: 84 M
+Downloading packages:
+--------------------------------------------------------------------------------
+Total                                              6.0 MB/s |  25 MB  00:04     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : gzip-1.5-9.el7.x86_64                                       1/44 
+  Installing : cracklib-2.9.0-11.el7.x86_64                                2/44 
+  Installing : cracklib-dicts-2.9.0-11.el7.x86_64                          3/44 
+  Installing : pam-1.1.8-18.el7.x86_64                                     4/44 
+  Installing : libpwquality-1.2.3-4.el7.x86_64                             5/44 
+  Installing : xz-5.2.2-1.el7.x86_64                                       6/44 
+  Installing : libnfnetlink-1.0.1-4.el7.x86_64                             7/44 
+  Installing : libmnl-1.0.3-7.el7.x86_64                                   8/44 
+  Installing : libnetfilter_conntrack-1.0.6-1.el7_3.x86_64                 9/44 
+  Installing : iptables-1.4.21-18.el7.x86_64                              10/44 
+  Installing : iproute-3.10.0-87.0.1.el7.x86_64                           11/44 
+  Installing : libuser-0.60-7.el7_1.x86_64                                12/44 
+  Installing : libutempter-1.1.6-4.el7.x86_64                             13/44 
+  Installing : 2:tar-1.26-32.el7.x86_64                                   14/44 
+  Installing : 1:make-3.82-23.el7.x86_64                                  15/44 
+  Installing : kmod-libs-20-15.0.1.el7.x86_64                             16/44 
+  Installing : acl-2.2.51-12.el7.x86_64                                   17/44 
+  Installing : binutils-2.25.1-31.base.el7.x86_64                         18/44 
+  Installing : qrencode-libs-3.4.1-3.el7.x86_64                           19/44 
+  Installing : 1:dbus-libs-1.6.12-17.0.1.el7.x86_64                       20/44 
+  Installing : 1:hardlink-1.0-19.el7.x86_64                               21/44 
+  Installing : sysvinit-tools-2.88-14.dsf.el7.x86_64                      22/44 
+  Installing : hostname-3.13-3.el7.x86_64                                 23/44 
+  Installing : elfutils-default-yama-scope-0.168-8.el7.noarch             24/44 
+  Installing : elfutils-libs-0.168-8.el7.x86_64                           25/44 
+  Installing : systemd-libs-219-42.0.1.el7.x86_64                         26/44 
+  Installing : util-linux-2.23.2-43.el7.x86_64                            27/44 
+  Installing : procps-ng-3.3.10-16.el7.x86_64                             28/44 
+  Installing : 1:pkgconfig-0.27.1-4.el7.x86_64                            29/44 
+  Installing : kpartx-0.4.9-111.el7.x86_64                                30/44 
+  Installing : 7:device-mapper-1.02.140-8.0.1.el7.x86_64                  31/44 
+  Installing : 7:device-mapper-libs-1.02.140-8.0.1.el7.x86_64             32/44 
+  Installing : cryptsetup-libs-1.7.4-3.el7.x86_64                         33/44 
+  Installing : dracut-033-502.0.1.el7.x86_64                              34/44 
+  Installing : kmod-20-15.0.1.el7.x86_64                                  35/44 
+  Installing : systemd-219-42.0.1.el7.x86_64                              36/44 
+  Installing : 1:dbus-1.6.12-17.0.1.el7.x86_64                            37/44 
+  Installing : iputils-20160308-10.el7.x86_64                             38/44 
+  Installing : initscripts-9.49.39-1.0.1.el7.x86_64                       39/44 
+  Installing : net-tools-2.0-0.22.20131004git.el7.x86_64                  40/44 
+  Installing : 1:openssl-1.0.2k-8.0.1.el7.x86_64                          41/44 
+  Installing : libaio-0.3.109-13.el7.x86_64                               42/44 
+  Installing : bc-1.06.95-13.el7.x86_64                                   43/44 
+  Installing : unzip-6.0-16.el7.x86_64                                    44/44 
+  Verifying  : gzip-1.5-9.el7.x86_64                                       1/44 
+  Verifying  : libmnl-1.0.3-7.el7.x86_64                                   2/44 
+  Verifying  : 1:pkgconfig-0.27.1-4.el7.x86_64                             3/44 
+  Verifying  : net-tools-2.0-0.22.20131004git.el7.x86_64                   4/44 
+  Verifying  : 7:device-mapper-libs-1.02.140-8.0.1.el7.x86_64              5/44 
+  Verifying  : elfutils-default-yama-scope-0.168-8.el7.noarch              6/44 
+  Verifying  : hostname-3.13-3.el7.x86_64                                  7/44 
+  Verifying  : libnetfilter_conntrack-1.0.6-1.el7_3.x86_64                 8/44 
+  Verifying  : sysvinit-tools-2.88-14.dsf.el7.x86_64                       9/44 
+  Verifying  : 1:hardlink-1.0-19.el7.x86_64                               10/44 
+  Verifying  : unzip-6.0-16.el7.x86_64                                    11/44 
+  Verifying  : 1:dbus-libs-1.6.12-17.0.1.el7.x86_64                       12/44 
+  Verifying  : cryptsetup-libs-1.7.4-3.el7.x86_64                         13/44 
+  Verifying  : qrencode-libs-3.4.1-3.el7.x86_64                           14/44 
+  Verifying  : iptables-1.4.21-18.el7.x86_64                              15/44 
+  Verifying  : binutils-2.25.1-31.base.el7.x86_64                         16/44 
+  Verifying  : systemd-libs-219-42.0.1.el7.x86_64                         17/44 
+  Verifying  : libnfnetlink-1.0.1-4.el7.x86_64                            18/44 
+  Verifying  : bc-1.06.95-13.el7.x86_64                                   19/44 
+  Verifying  : iputils-20160308-10.el7.x86_64                             20/44 
+  Verifying  : systemd-219-42.0.1.el7.x86_64                              21/44 
+  Verifying  : libaio-0.3.109-13.el7.x86_64                               22/44 
+  Verifying  : pam-1.1.8-18.el7.x86_64                                    23/44 
+  Verifying  : acl-2.2.51-12.el7.x86_64                                   24/44 
+  Verifying  : libpwquality-1.2.3-4.el7.x86_64                            25/44 
+  Verifying  : elfutils-libs-0.168-8.el7.x86_64                           26/44 
+  Verifying  : initscripts-9.49.39-1.0.1.el7.x86_64                       27/44 
+  Verifying  : dracut-033-502.0.1.el7.x86_64                              28/44 
+  Verifying  : 7:device-mapper-1.02.140-8.0.1.el7.x86_64                  29/44 
+  Verifying  : util-linux-2.23.2-43.el7.x86_64                            30/44 
+  Verifying  : xz-5.2.2-1.el7.x86_64                                      31/44 
+  Verifying  : kmod-libs-20-15.0.1.el7.x86_64                             32/44 
+  Verifying  : 1:make-3.82-23.el7.x86_64                                  33/44 
+  Verifying  : 1:openssl-1.0.2k-8.0.1.el7.x86_64                          34/44 
+  Verifying  : libuser-0.60-7.el7_1.x86_64                                35/44 
+  Verifying  : procps-ng-3.3.10-16.el7.x86_64                             36/44 
+  Verifying  : iproute-3.10.0-87.0.1.el7.x86_64                           37/44 
+  Verifying  : 1:dbus-1.6.12-17.0.1.el7.x86_64                            38/44 
+  Verifying  : cracklib-dicts-2.9.0-11.el7.x86_64                         39/44 
+  Verifying  : kpartx-0.4.9-111.el7.x86_64                                40/44 
+  Verifying  : 2:tar-1.26-32.el7.x86_64                                   41/44 
+  Verifying  : cracklib-2.9.0-11.el7.x86_64                               42/44 
+  Verifying  : kmod-20-15.0.1.el7.x86_64                                  43/44 
+  Verifying  : libutempter-1.1.6-4.el7.x86_64                             44/44 
+
+Installed:
+  bc.x86_64 0:1.06.95-13.el7        initscripts.x86_64 0:9.49.39-1.0.1.el7     
+  libaio.x86_64 0:0.3.109-13.el7    net-tools.x86_64 0:2.0-0.22.20131004git.el7
+  openssl.x86_64 1:1.0.2k-8.0.1.el7 unzip.x86_64 0:6.0-16.el7                  
+
+Dependency Installed:
+  acl.x86_64 0:2.2.51-12.el7                                                    
+  binutils.x86_64 0:2.25.1-31.base.el7                                          
+  cracklib.x86_64 0:2.9.0-11.el7                                                
+  cracklib-dicts.x86_64 0:2.9.0-11.el7                                          
+  cryptsetup-libs.x86_64 0:1.7.4-3.el7                                          
+  dbus.x86_64 1:1.6.12-17.0.1.el7                                               
+  dbus-libs.x86_64 1:1.6.12-17.0.1.el7                                          
+  device-mapper.x86_64 7:1.02.140-8.0.1.el7                                     
+  device-mapper-libs.x86_64 7:1.02.140-8.0.1.el7                                
+  dracut.x86_64 0:033-502.0.1.el7                                               
+  elfutils-default-yama-scope.noarch 0:0.168-8.el7                              
+  elfutils-libs.x86_64 0:0.168-8.el7                                            
+  gzip.x86_64 0:1.5-9.el7                                                       
+  hardlink.x86_64 1:1.0-19.el7                                                  
+  hostname.x86_64 0:3.13-3.el7                                                  
+  iproute.x86_64 0:3.10.0-87.0.1.el7                                            
+  iptables.x86_64 0:1.4.21-18.el7                                               
+  iputils.x86_64 0:20160308-10.el7                                              
+  kmod.x86_64 0:20-15.0.1.el7                                                   
+  kmod-libs.x86_64 0:20-15.0.1.el7                                              
+  kpartx.x86_64 0:0.4.9-111.el7                                                 
+  libmnl.x86_64 0:1.0.3-7.el7                                                   
+  libnetfilter_conntrack.x86_64 0:1.0.6-1.el7_3                                 
+  libnfnetlink.x86_64 0:1.0.1-4.el7                                             
+  libpwquality.x86_64 0:1.2.3-4.el7                                             
+  libuser.x86_64 0:0.60-7.el7_1                                                 
+  libutempter.x86_64 0:1.1.6-4.el7                                              
+  make.x86_64 1:3.82-23.el7                                                     
+  pam.x86_64 0:1.1.8-18.el7                                                     
+  pkgconfig.x86_64 1:0.27.1-4.el7                                               
+  procps-ng.x86_64 0:3.3.10-16.el7                                              
+  qrencode-libs.x86_64 0:3.4.1-3.el7                                            
+  systemd.x86_64 0:219-42.0.1.el7                                               
+  systemd-libs.x86_64 0:219-42.0.1.el7                                          
+  sysvinit-tools.x86_64 0:2.88-14.dsf.el7                                       
+  tar.x86_64 2:1.26-32.el7                                                      
+  util-linux.x86_64 0:2.23.2-43.el7                                             
+  xz.x86_64 0:5.2.2-1.el7                                                       
+
+Complete!
+Loaded plugins: ovl
+Cleaning repos: ol7_UEKR4 ol7_latest
+Cleaning up everything
+Maybe you want: rm -rf /var/cache/yum, to also free up space taken by orphaned data from disabled or removed repos
+Archive:  oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+   creating: Disk1/
+   creating: Disk1/upgrade/
+  inflating: Disk1/upgrade/gen_inst.sql  
+   creating: Disk1/response/
+  inflating: Disk1/response/xe.rsp   
+  inflating: Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm  
+[91m/var/tmp/rpm-tmp.daQtu2: line 257: [: 18446744073692774399: integer expression expected
+/var/tmp/rpm-tmp.daQtu2: line 271: [: 18446744073692774399: integer expression expected
+[0m[91msysctl: setting key "fs.file-max": Read-only file system
+[0mExecuting post-install steps...
+You must run '/etc/init.d/oracle-xe configure' as the root user to configure the database.
+
+ ---> f3d52dda2cff
+Removing intermediate container 1e090dd3f023
+Step 7/9 : VOLUME $ORACLE_BASE/oradata
+ ---> Running in 36681e47d8b8
+ ---> 24207983d471
+Removing intermediate container 36681e47d8b8
+Step 8/9 : EXPOSE 1521 8080
+ ---> Running in 547675a12138
+ ---> a4262a16c2c6
+Removing intermediate container 547675a12138
+Step 9/9 : CMD exec $ORACLE_BASE/$RUN_FILE
+ ---> Running in d9b17efff6bc
+ ---> cdd49badb1dc
+Removing intermediate container d9b17efff6bc
+Successfully built cdd49badb1dc
+Successfully tagged oracle/database:11.2.0.2-xe
+
+  Oracle Database Docker Image for 'xe' version 11.2.0.2 is ready to be extended: 
+    
+    --> oracle/database:11.2.0.2-xe
+
+  Build completed in 68 seconds.
+  
